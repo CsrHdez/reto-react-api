@@ -32,6 +32,11 @@ router.post("/login", async (req, res, next) => {
 router.post("/register", async (req, res, next) => {
 	const { userDataRegister } = req.body
 	try {
+		const payload = {
+            sub: userDataRegister.email,
+            exp: (Date.now() / 1000) + (60 * 60)
+        }
+        userDataRegister.verifyHash= await sign(payload)
 		const newUser = await User.create(userDataRegister)
 		res.status(201).json({
 			ok: true,
