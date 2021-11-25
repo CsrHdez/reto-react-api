@@ -1,6 +1,8 @@
 const express = require("express")
 const Routes = require("./Routes")
+const db = require("./Libs/DB")
 const app = express()
+const port = process.env['PORT']
 
 // Middelwares
 app.use(express.json())
@@ -15,8 +17,15 @@ app.get("/", (req, res) => {
 })
 Routes(app)
 
-app.listen(8080, () => {
-	console.log(`app server runing on port 8080`)
+app.listen(port, () => {
+	console.log(`app server runing on port ${port}`)
+	db.connect()
+        .then(() => {
+            console.log("DB Connected")
+        })
+        .catch(err => {
+            console.error("Connection refused ", err)
+        })
 })
 
 // Resources
