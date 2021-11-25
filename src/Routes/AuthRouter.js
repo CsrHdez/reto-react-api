@@ -1,6 +1,8 @@
 const express = require("express")
 const User = require("../Models/UserModel")
 const { encryptPass } = require("../Libs/Encryption")
+const { sign } = require("../Libs/JWT")
+
 const router = express.Router()
 
 router.post("/login", async (req, res, next) => {
@@ -8,8 +10,13 @@ router.post("/login", async (req, res, next) => {
     const user = await User.getParams({username: userDataLogin.username})
     const isMatch = await encryptPass.verifyPassword(userDataLogin.password, user.password)
 	if ( isMatch ) {
-		const token = "lsfshfs38947nnn#$h3hsfh"
-		res.status(200).json({
+		const payload = {
+            sub: user._id,
+            role: user.admin,
+            exp: (Date.now() / 1000) + (60 * 60)
+        }
+        const token = await sign(payload)
+        res.status(200).json({
             ok: true,
             message: "Sign in successful",
             payload: {token}
