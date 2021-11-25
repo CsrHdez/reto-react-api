@@ -1,27 +1,39 @@
 const express = require("express")
+const User = require("../Models/UserModel")
+const { encryptPass } = require("../Libs/Encryption")
 const router = express.Router()
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res, next) => {
 	const { userDataLogin } = req.body
-	res.json({
-		ok: true,
-		message: "Logged in",
-		payload: {
-			token: "fjsjfosfjldjfjl54sd4f"
-		}
-	})
+    const user = await User.getParams({username: userDataLogin.username})
+    const isMatch = await encryptPass.verifyPassword(userDataLogin.password, user.password)
+	if ( isMatch ) {
+		const token = "lsfshfs38947nnn#$h3hsfh"
+		res.status(200).json({
+            ok: true,
+            message: "Sign in successful",
+            payload: {token}
+        })
+	} else {
+        res.status(401).json({
+            ok: false,
+            message: "Credentials invalidates"
+        })
+    }
 })
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res, next) => {
 	const { userDataRegister } = req.body
-	res.json({
-		ok: true,
-		message: "User created successfuly",
-		payload: {
-			id: 1,
-			...userDataRegister
-		}
-	})
+	try {
+		const newUser = await User.create(userDataRegister)
+		res.status(201).json({
+			ok: true,
+			message: "User created successfuly",
+			payload: newUser
+		})
+	} catch (err) {
+		next(err)
+	}
 })
 
 router.get("/verify/:hash", (req, res) => {
