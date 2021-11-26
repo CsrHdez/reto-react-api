@@ -32,3 +32,4 @@ app.listen(port, () => {
 // https://mongoosejs.com/docs/validation.html
 // https://code.tutsplus.com/es/articles/an-introduction-to-mongoose-for-mongodb-and-nodejs--cms-29527
 // https://stackoverflow.com/questions/11646107/you-have-not-concluded-your-merge-merge-head-exists
+// https://yosoy.dev/deploy-de-github-a-heroku/
