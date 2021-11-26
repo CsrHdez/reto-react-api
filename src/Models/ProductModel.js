@@ -8,6 +8,10 @@ const getByType = async type => {
 	return await Product.find({type}).exec()
 }
 
+const getById = async id => {
+	return await Product.findById(id).exec()
+}
+
 const create = async productData => {
 	const newProduct = new Product(productData)
 	return await newProduct.save()
@@ -28,6 +32,7 @@ const search = async filters => {
 module.exports = {
 	getAll,
 	getByType,
+	getById,
 	create,
 	update,
 	del,

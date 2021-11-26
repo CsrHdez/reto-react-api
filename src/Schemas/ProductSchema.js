@@ -20,7 +20,7 @@ const productSchema = {
 		},
 		required: [true, 'Es necesario el tipo de producto.']
 	},
-	properties: Mixed,
+	properties: [Schema.Types.Mixed],
 	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User"

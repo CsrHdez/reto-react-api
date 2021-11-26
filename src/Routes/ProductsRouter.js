@@ -1,72 +1,102 @@
 const express = require("express")
+const Product = require("../Models/ProductModel")
 const router = express.Router()
 
-router.get("/", (req, res) => {
-	res.json({
-		ok: true,
-		message: "All products",
-		payload: [
-			{name: "Proucto 1"}
-		]
-	})
+router.get("/", async (req, res, next) => {
+	try {
+		const allProducts = await Product.getAll()
+		res.json({
+			ok: true,
+			message: "All products",
+			payload: allProducts
+		})
+	} catch (err) {
+		next(err)
+	}
 })
 
-router.get("/atoles", (req, res) => {
-	res.json({
-		ok: true,
-		message: "All atoles",
-		payload: [
-			{name: "atole"},
-			{name: "atole 2"}
-		]
-	})
+router.get("/atoles", async (req, res, next) => {
+	try {
+		const allAtoles = await Product.getByType('Atole')
+		res.json({
+			ok: true,
+			message: "all atoles",
+			payload: allAtoles
+		})
+	} catch (err) {
+		next(err)
+	}
 })
 
-router.get("/tamales", (req, res) => {
-	res.json({
-		ok: true,
-		message: "All tamales",
-		payload: [
-			{name: "Tamal verde"},
-			{name: "Tamlal rojo"}
-		]
-	})
+router.get("/tamales", async (req, res, next) => {
+	try {
+		const allAtoles = await Product.getByType('Tamal')
+		res.json({
+			ok: true,
+			message: "all atoles",
+			payload: allAtoles
+		})
+	} catch (err) {
+		next(err)
+	}
 })
 
-router.post("/", (req, res) => {
+router.get("/:id", async (req, res, next) => {
+	const { id } = req.params
+	try {
+		const product = await Product.getById(id)
+		res.json({
+			ok: true,
+			message: "Product find",
+			payload: product
+		})
+	} catch (err) {
+		next(err)
+	}
+})
+
+router.post("/", async (req, res, next) => {
 	const { productData } = req.body
-	res.json({
-		ok: true,
-		message: "Product add successfuly",
-		payload: {
-			id: 1,
-			...productData
-		}
-	})
+	productData.createdBy = "619fda67a455b496579f075a"
+	try {
+		const newProduct = await Product.create(productData)
+		res.json({
+			ok: true,
+			message: "Product created",
+			payload: newProduct,
+		})
+	} catch (err) {
+		next(err)
+	}
 })
 
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res, next) => {
 	const { id } = req.params
 	const { productDataUpdate } = req.body
-	res.json({
-		ok: true,
-		message: "Product updated successfuly",
-		payload: {
-			id,
-			...productDataUpdate
-		}
-	})
+	try {
+		const productUpdate = await Product.update(id, productDataUpdate)
+		res.json({
+			ok: true,
+			message: "Product updated",
+			payload: productUpdate
+		})
+	} catch (err) {
+		next(err)
+	}
 })
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res, next) => {
 	const { id } = req.params
-	res.json({
-		ok: true,
-		message: "Product deleted successfuly",
-		payload: {
-			id
-		}
-	})
+	try {
+		const productDelete = await Product.del(id)
+		res.json({
+			ok: true,
+			message: "Product deleted",
+			payload: productDelete
+		})
+	} catch (err) {
+		next(err)
+	}
 })
 
 
