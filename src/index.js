@@ -1,10 +1,12 @@
 const express = require("express")
+const cors = require("cors")
 const Routes = require("./Routes")
 const db = require("./Libs/DB")
 const app = express()
 const port = process.env['PORT']
 
 // Middelwares
+app.use(cors())
 app.use(express.json())
 
 // Routes
